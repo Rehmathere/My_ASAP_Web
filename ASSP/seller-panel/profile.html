@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Seller Dashbaord</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
+</head>
+
+<body>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+                aria-controls="offcanvasExample">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand fw-bold" href="index.html">ASsoonaspossible</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto me-md-4 mb-2 mb-lg-0">
+                    <li class="nav-item dropdown d-flex text-light">
+                        <a id="welcomeText" class="nav-link dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-regular fa-user"></i> Seller
+                        </a>
+                        <ul class="dropdown-menu border-0 bg-light ms-auto">
+                            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                            <li><a class="dropdown-item" id="logoutButton" href="../BecomeSeller.html">Logout</a></li>
+                        </ul>
+                </ul>
+                </li>
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+
+    <!-- sidebar -->
+    <div class="offcanvas offcanvas-start bg-purple text-white sidebar-nav" tabindex="-1" id="offcanvasExample"
+        aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header shadow-sm d-block text-center">
+            <div class="offcanvas-title" id="offcanvasExampleLabel">
+                <a class="navbar-brand fw-bold" href="index.html">ASsoonaspossible</a>
+            </div>
+        </div>
+        <div class="offcanvas-body pt-3 p-0">
+            <nav class="navbar-dark">
+                <ul class="navbar-nav sidenav">
+                    <li class="nav-link bordered px-3">
+                        <a href="index.html" class="nav-link px-3">
+                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link bordered px-3">
+                        <a href="profile.html" class="nav-link px-3 active">
+                            <span class="me-2"><i class="bi bi-person"></i></span>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-link bordered px-3">
+                        <a href="testing.html" class="nav-link px-3">
+                            <span class="me-2"><i class="bi bi-person"></i></span>
+                            <span>message</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- sidebar end -->
+
+    <!-- main content -->
+    <main class="mt-3 p-2">
+        <div class="container">
+            <div class="page-title">
+                <div style="font-weight: 500;" class="fs-3">Profile</div>
+            </div>
+            <nav class="mt-2 mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+
+            <div class="profile">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="page-title fs-5 fw-bold mb-4">
+                            Seller Profile
+                        </div>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation" >
+                                <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#profile-tab-pane" type="button" role="tab"
+                                    aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
+                                    
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="editpro-tab" data-bs-toggle="tab"
+                                    data-bs-target="#editpro-tab-pane" type="button" role="tab"
+                                    aria-controls="editpro-tab-pane" aria-selected="false">Edit Profile</button>
+                            </li>
+                            <!-- <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="changepsw-tab" data-bs-toggle="tab"
+                                    data-bs-target="#changepsw-tab-pane" type="button" role="tab"
+                                    aria-controls="changepsw-tab-pane" aria-selected="false">Change Password</button>
+                            </li> -->
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel"
+                                aria-labelledby="profile-tab" tabindex="0">
+                                <div class="mt-4 px-4">
+                                    <div class="row text-start">
+                                        <div class="col-md-4">
+                                            <img class="d-block m-auto"
+                                                style="width: 150px; height: 150px; border-radius: 50%;"
+                                                src="https://www.nicepng.com/png/detail/128-1280406_view-user-icon-png-user-circle-icon-png.png"
+                                                alt="" id="seller-profile-pic">
+                                            <input type="file" id="fileInput">
+                                            <button onclick="convertToBase64()">Upload Image</button>
+
+        <script>
+            let userIdForImage = ""
+            function convertToBase64() {
+                const fileInput = document.getElementById('fileInput');
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64String = event.target.result;
+                        const fileType = getFileType(file.type);
+                        const dataURL = `data:image/${fileType};base64,${base64String.split(',')[1]}`;
+                        // Now you have the base64 string with the appropriate prefix for the file type
+                        // You can send this string to your server to save it in the database
+                        
+                        uploadToDatabase(dataURL);
+
+                    };
+                    reader.readAsDataURL(file);
+                    } else {
+                        alert('Please select a file.');
+                    }
+            }
+
+            function getFileType(mimeType) {
+                
+                const typeMap = {
+                    'image/jpeg': 'jpeg',
+                    'image/png': 'png',
+                    'image/gif': 'gif',
+                    'image/svg+xml': 'svg+xml', 
+                };
+
+                // Check if mimeType is in the typeMap, otherwise default to 'jpeg'
+                return typeMap[mimeType] || 'jpeg';
+            }
+
+            async function uploadToDatabase(image){
+                try {
+                    const response = await  fetch('https://asap-new-backend.vercel.app/seller/update',{
+                      method:'POST',
+                      headers:{
+                          "Content-Type":"application/json"
+                      },
+                      body:JSON.stringify({
+                          image:image,
+                          sellerId:userIdForImage
+                      })
+                   });
+                   const data = await response.json()
+                   const imgTag = document.getElementById("seller-profile-pic")
+                   imgTag.src = data.image
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
+        </script>
+                                            <h4 class="text-center mt-4" id="userName">Name</h4>
+                                            <h6 class="text-center" id="userRole">Seller</h6>
+                                            <!-- <h6 class="text-center" id="isActive">Active/UnActive</h6> -->
+                                        </div>
+                                        <div class="col-md-8">
+                                            <!-- <ul class="profile-details">
+                                                <li class="text-muted">Name : </li>
+                                                <li class="ms-3 fix-w" id="userName"> Name</li>
+                                            </ul> -->
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Phone : </li>
+                                                <li class="ms-3 fix-w" id="userPhone"> 017xxxxxxxx</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Email : </li>
+                                                <li class="ms-3 fix-w" id="userEmail"> abc@gmail.com</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Address : </li>
+                                                <li class="ms-3 fix-w" id="useraddress"> abc</li>
+                                            </ul>
+
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Role : </li>
+                                                <li class="ms-3 fix-w" id="userRoleDetail"> Seller</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Registered : </li>
+                                                <li class="ms-3 fix-w" id="userRegistered"> 12-12-12</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted">Description : </li>
+                                                <li class="ms-3 fix-w" id="userDescription"> No description.</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted fw-bold">Service Category :</li>
+                                                <li class="ms-3 fix-w fw-bold" id="userCategory"> abc</li>
+                                            </ul>
+                                            <ul class="profile-details">
+                                                <li class="text-muted fw-bold">Service Product : </li>
+                                                <li class="ms-3 fix-w fw-bold" id="userProduct"> abc</li>
+                                            </ul>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="editpro-tab-pane" role="tabpanel"
+                                aria-labelledby="editpro-tab" tabindex="0">
+                                <div class="mt-4 px-4">
+                                    <div class="row">
+                                        <div class="col-12 col-md-8 m-auto">
+                                            <form action="" id="profileForm">
+                                                <div class="mb-3 row">
+                                                    <label for="user_name" class="col-sm-2 col-form-label">Name</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" placeholder="Enter Name"
+                                                        
+                                                            name="user_name" id="user_name">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="user_phone"
+                                                        class="col-sm-2 col-form-label">Phone</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="tel" class="form-control" placeholder="Enter Phone Number"
+                                                            name="user_phone" id="user_phone">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="user_email"
+                                                        class="col-sm-2 col-form-label">Email</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" placeholder="Enter Email"
+                                                            name="user_email" id="user_email">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="user_email"
+                                                        class="col-sm-2 col-form-label">Description</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" placeholder="Enter Description"
+                                                            name="user_description" id="user_description">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 text-center">
+                                                        <div class="mb-3">
+                                                            <button type="submit" class="btn btn-primary">Update
+                                                                Profile</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="changepsw-tab-pane" role="tabpanel"
+                                aria-labelledby="changepsw-tab" tabindex="0">
+                                <div class="mt-4 px-4">
+                                    <div class="row">
+                                        <div class="col-12 col-md-8 m-auto">
+                                            <form action="">
+                                                <div class="mb-3 row">
+                                                    <label for="o_psw" class="col-sm-4 col-form-label">Old
+                                                        Password</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="password" class="form-control" name="o_psw"
+                                                            id="o_psw">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="n_psw" class="col-sm-4 col-form-label">New
+                                                        Password</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="password" class="form-control" name="n_psw"
+                                                            id="n_psw">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="r_psw" class="col-sm-4 col-form-label">Repeat
+                                                        Password</label>
+                                                    <div class="col-sm-8">
+                                                        <input type="password" class="form-control" name="r_psw"
+                                                            id="r_psw">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 text-center">
+                                                        <div class="mb-3">
+                                                            <button type="submit" class="btn btn-primary" id="updateDetailBtn">Change
+                                                                Password</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- main content end-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // Function to populate categories dropdown
+        function populateCategories() {
+            $.ajax({
+                url: 'https://assp-api.vercel.app/Category',
+                type: 'GET',
+                success: function (data) {
+                    const categoryDropdown = $('#category');
+                    categoryDropdown.empty();
+                    categoryDropdown.append('<option value="" selected>Select Category</option>');
+                    data.forEach(category => {
+                        categoryDropdown.append(`<option value="${category._id}">${category.Title}</option>`);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching categories:', error);
+                }
+            });
+        }
+
+        // Function to populate products dropdown based on selected category
+        function populateProducts(categoryId) {
+            $.ajax({
+                url: `https://assp-api.vercel.app/product?categoryId=${categoryId}`,
+                type: 'GET',
+                success: function (data) {
+                    const productDropdown = $('#product');
+                    productDropdown.empty();
+                    productDropdown.append('<option value="" selected>Select Product</option>');
+                    data.products.forEach(product => {
+                        productDropdown.append(`<option value="${product._id}">${product.name}</option>`);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching products:', error);
+                }
+            });
+        }
+        document.getElementById('profileForm').addEventListener('submit',async function(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+        const Name = document.getElementById('user_name').value;
+        const phoneNumber = document.getElementById('user_phone').value;
+        const email = document.getElementById('user_email').value;
+        const details = document.getElementById('user_description').value;
+
+        const data = {
+            sellerId:localStorage.getItem("userId"),
+            Name: Name,
+            phoneNumber: phoneNumber,
+            email: email,
+            details: details
+        };
+
+        try {
+            // Make the POST request
+            const response = await fetch('https://asap-new-backend.vercel.app/seller-update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data) // Convert data to JSON string
+            });
+
+            // Check if request was successful
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Response:', responseData);
+                window.location.reload()
+            } else {
+                // Handle error response
+                console.error('Error:', response.status);
+                alert("Error Updating Your Profile.")
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("Error Updating Your Profile.")
+        }
+        
+    });
+        function submitForm(e) {
+            
+            console.log("clicked")
+            const formData = $('#sellerForm').serialize();
+            $.ajax({
+                url: 'https://assp-api.vercel.app/seller-form',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    $('#sellerForm')[0].reset();
+                },
+                error: function (error) {
+                    console.error('Error submitting form:', error);
+                }
+            });
+        }
+        // Initialize the form by populating categories
+        populateCategories();
+
+        // Attach an event listener to the category dropdown to populate products based on selection
+        $('#category').on('change', function () {
+            const selectedCategoryId = $(this).val();
+            if (selectedCategoryId) {
+                populateProducts(selectedCategoryId);
+            } else {
+                $('#product').empty();
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="js/jquery-3.5.1.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- Include this script in the head section of each HTML file -->
+
+    <script>
+        async function fetchUserDetails() {
+            try {
+                // Get the user ID from localStorage
+                const userId = localStorage.getItem("userId");
+
+                if (!userId) {
+                    console.error("User ID not found in localStorage");
+                    return;
+                }
+
+                // Update the endpoint to the correct one
+                const response = await fetch(`https://assp-api.vercel.app/getallsellers/${userId}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.status === 200) {
+                    const userData = await response.json();
+                    const username = userData.user.Name;
+                    userIdForImage = userData.user._id 
+                    // Display the welcome message with the username
+                    document.getElementById("welcomeText").textContent = `Welcome ${username},`;
+                    if(userData.user.image){
+                        document.getElementById("seller-profile-pic").src = userData.user.image
+                    }
+                    document.getElementById("userName").textContent = userData.user.Name;
+                    console.log(userData.user.Name)
+                    document.getElementById("userPhone").textContent = userData.user.phoneNumber;
+                    document.getElementById("userEmail").textContent = userData.user.email;
+                    document.getElementById("userRoleDetail").textContent = userData.user.userType;
+                    document.getElementById("userDescription").textContent = userData.user.details;
+                    document.getElementById("useraddress").textContent = userData.user.city;
+                    const categoryId = userData.user.category;
+                    const categoryName = await fetchCategoryName(categoryId);
+                    document.getElementById("userCategory").textContent = categoryName;
+
+                    // Fetch the product name using the ID
+                    const productId = userData.user.product;
+                    const productName = await fetchProductName(productId);
+                    document.getElementById("userProduct").textContent = productName;
+                    const registrationDate = new Date(userData.user.dateAdded);
+                    const formattedDate = registrationDate.toLocaleDateString();
+                    // Adjust the format as needed
+                    document.getElementById("userRegistered").textContent = formattedDate;
+                    
+                    // Display isPaid status
+                    const isPaidStatus = userData.user.isPaid ? "Paid" : "Unpaid";
+                    const isPaidElement = document.getElementById("isPaid");
+                    isPaidElement.textContent = isPaidStatus;
+                    isPaidElement.style.color = userData.user.isPaid ? "green" : "red";
+
+                    // Display isActive status
+                    const isActiveStatus = userData.user.isActive ? "Active" : "Inactive";
+                    const isActiveElement = document.getElementById("isActive");
+                    isActiveElement.textContent = isActiveStatus;
+                    isActiveElement.style.color = userData.user.isActive ? "green" : "red";
+                    async function fetchCategoryName(categoryId) {
+                        try {
+                            const response = await fetch(`https://assp-api.vercel.app/Category/${categoryId}`, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: localStorage.getItem("token"),
+                                },
+                            });
+
+                            if (response.ok) {
+                                const categoryData = await response.json();
+                                return categoryData.Title; // Assuming that the category name property is 'Title'
+                            } else {
+                                const data = await response.json();
+                                return "Unknown Category";
+                            }
+                        } catch (error) {
+                            console.error("An error occurred while fetching category name: " + error.message);
+                            return "Unknown Category";
+                        }
+                    }
+
+                    // Function to fetch product name by ID
+                    async function fetchProductName(productId) {
+                        try {
+                            const response = await fetch(`https://assp-api.vercel.app/product/${productId}`, {
+                                method: "GET",
+                                headers: {
+                                    Authorization: localStorage.getItem("token"),
+                                },
+                            });
+
+                            if (response.status === 200) {
+                                const productData = await response.json();
+                                return productData.name; // Assuming that the product name property is 'name'
+                            } else {
+                                const data = await response.json();
+                                return "Unknown Product";
+                            }
+                        } catch (error) {
+                            console.error("An error occurred while fetching product name: " + error.message);
+                            return "Unknown Product";
+                        }
+                    }
+                } else {
+                    const data = await response.json();
+                }
+            } catch (error) {
+                console.error("An error occurred while fetching user details: " + error.message);
+            }
+        }
+
+        // Call the function to fetch and display user details
+        fetchUserDetails();
+    </script>
+    <!-- Add this script to your HTML file where you handle the logout functionality -->
+    <script>
+        async function logoutUser() {
+            try {
+                // Get the user token from localStorage
+                const userToken = localStorage.getItem("token");
+
+                // Check if the user is authenticated (token exists)
+                if (!userToken) {
+                    console.error("User is not authenticated. Token not found.");
+                    return;
+                }
+
+                // Send a POST request to the logout endpoint
+                const response = await fetch("https://assp-api.vercel.app/logout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": userToken, // Include the token in the Authorization header
+                    },
+                });
+
+                if (response.status === 200) {
+                    // Clear user data from localStorage
+                    localStorage.removeItem("userId");
+                    localStorage.removeItem("token");
+
+                    // Redirect to the login page or any other page after logout
+                    window.location.href = "../Frontend/BecomeSeller.html";
+                } else {
+                    const data = await response.json();
+                }
+            } catch (error) {
+                console.error("An error occurred during logout:", error.message);
+            }
+        }
+
+        // Example: Call the logout function when the logout button is clicked
+        const logoutButton = document.getElementById("logoutButton");
+
+        if (logoutButton) {
+            logoutButton.addEventListener("click", logoutUser);
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admin.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Admin</title>
+  <style>
+    body{
+      display: none;
+    }
+    .hide {
+    display: none;
+}
+  </style>
+</head>
+<body>
+  <div class="nav">
+
+    <h1>Admin</h1>
+    <button class="logout" onclick="handleLogout() ">Logout</button>
+  </div>
+  
+  <div class="mainDiv">
+    <div class="leftDiv">
+      <button onclick="handleUser()">Users</button>
+      <button onclick="handlePayment()">Payment</button>
+      <button onclick="handleCategory()">Category</button>
+      <button onclick="handleProduct()">Product</button>
+      <button onclick="handleReq()">Requests</button>
+    </div>
+    <div class="sideDiv2">
+
+      <table id="userTable" class="table table-striped table-hover " >
+        <thead >
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+            
+        </tbody>
+      </table>
+
+      <table id="paymentTable" class="table table-striped table-hover hide" >
+        <thead >
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">IsPaid</th>
+          </tr>
+        </thead>
+        <tbody id="paymentTableBody">
+          
+            
+        </tbody>
+      </table>
+      <table id="categoryTable" class="table table-striped table-hover hide" >
+        
+        <thead >
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+            
+          </tr>
+        </thead>
+        <button id="overlayButton"  onclick='openOverlay()'>ADD Category</button>
+
+        <tbody id="categoryTableBody">
+         
+          
+            
+        </tbody>
+      </table>
+
+      <table id="productTable" class="table table-striped table-hover hide" >
+        
+        <thead >
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+            
+          </tr>
+        </thead>
+        <button id="productOverlayButton"  onclick='openProductOverlay()'>ADD</button>
+
+        <!-- <button id="overlayButtonProduct"  onclick='openOverlay()'>ADD</button> -->
+
+        <tbody id="productTableBody">
+         
+          
+            
+        </tbody>
+      </table>
+
+      <table id="reqTable" class="table table-striped table-hover hide " >
+        <thead >
+          <tr>
+            <!-- <th scope="col">#</th> -->
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody id="reqTableBody">
+          <!-- <h1>Some </h1> -->
+            
+        </tbody>
+      </table>
+
+    </div>
+
+<!-- <button onclick="openOverlay()">Open Overlay</button> -->
+
+<div id="overlay" class="overlay">
+  <div class="overlay-content">
+    <span class="close" onclick="closeOverlay()">&times;</span>
+    <input type="text" id="inputField1" placeholder="Name">
+    <input type="text" id="inputField2" placeholder="Image url">
+    <button onclick="submitValues()">Submit</button>
+  </div>
+</div>
+
+
+
+<div class="productOverlay" id="productOverlay">
+  <div class="overlay-content">
+    <h2>Add New Product</h2>
+    <input type="text" id="productName" placeholder="Name">
+    <input type="text" id="productPrice" placeholder="Url">
+    <select id="productCategory">
+      
+    </select>
+    <button onclick="submitProduct()">Add Product</button>
+    <button onclick="closeProductOverlay()">Cancel</button>
+  </div>
+</div>
+
+
+  </div>
+  
+
+
+
+  <script>
+    function getUserInfo() {
+      const userId = localStorage.getItem('userId');
+      const userType = localStorage.getItem('userType');
+      return { userId, userType };
+    }
+    function checkAccess() {
+      const { userId, userType } = getUserInfo();
+
+      // Check if userId and userType exist and if userType is 'Admin'
+      if (userId && userType && userType === 'Admin') {
+        
+        document.body.style.display = 'block';
+        getUsers().then(data=>displayUser(data))
+        document.getElementById("overlayButton").classList.add("hide");
+        document.getElementById("productOverlayButton").classList.add("hide");
+
+
+      } else {
+        window.location.href = '../Login And Registration.html';
+      }
+    }
+
+    async function getUsers() {
+  try {
+    const res = await fetch("https://asap-new-backend.vercel.app/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", 
+        // "Cache-Control": "no-cache",
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to get users: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data; 
+  } catch (error) {
+    console.error("Error in getUsers:", error.message);
+    throw error;
+  }
+}
+
+async function displayUser(users) {
+  try {
+    // console.log(users);
+    const userTable = document.getElementById("userTableBody");
+    userTable.innerHTML = ''
+    let index = 0;
+    users&&users.forEach((user) => {
+      if (user.userType !== "Admin" && user.isDeleted===false) {
+        index++;
+        const row = `<tr>
+          <th scope="row">${index}</th>
+          <th scope="row">${user.Name}</th>
+          <th scope="row">${user.email}</th>
+          <th scope="row">${user.phoneNumber}</th>
+          <th scope="row">${user.address}</th>
+          <td><button class='btn btn-primary' onclick='deleteUser("${user._id}")'>Delete</button></td>
+        </tr>`;
+        userTable.innerHTML += row;
+      }
+    });
+  } catch (error) {
+    console.error("Error in displayUsers:", error);
+  }
+}
+
+  async function deleteUser(userId) {
+  try {
+    const res = await fetch(`https://asap-new-backend.vercel.app/deleteUser/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json"
+        
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("Error deleting user");
+    }
+    const users = await getUsers();
+    displayUser(users);
+  } catch (error) {
+    console.error("Error deleting user:", error.message);
+  }
+}
+
+// console.log(get);
+// console.log();
+function toggleVisibility(elementIdToShow, ...elementIdsToHide) {
+  const elementToShow = document.getElementById(elementIdToShow);
+  elementToShow.classList.remove('hide');
+  
+  elementIdsToHide.forEach((elementId) => {
+    const elementToHide = document.getElementById(elementId);
+    elementToHide.classList.add('hide');
+  });
+}
+
+function handlePayment() {
+  toggleVisibility("paymentTable", "userTable", "categoryTable", "productTable",'reqTable');
+  // console.log("Clicked on payment");
+  document.getElementById("overlayButton").classList.add("hide");
+  document.getElementById("productOverlayButton").classList.add("hide");
+
+  displayPayments();
+}
+
+function handleUser() {
+  toggleVisibility("userTable", "paymentTable", "categoryTable", "productTable",'reqTable');
+  // console.log("Clicked on user");
+  document.getElementById("overlayButton").classList.add("hide");
+  document.getElementById("productOverlayButton").classList.add("hide");
+
+}
+
+function handleCategory() {
+  toggleVisibility("categoryTable", "userTable", "paymentTable", "productTable",'reqTable');
+  // console.log("Clicked on Category");
+  document.getElementById("overlayButton").classList.remove("hide");
+  document.getElementById("productOverlayButton").classList.add("hide");
+
+  displayCategories();
+}
+
+function handleProduct() {
+  toggleVisibility("productTable", "userTable", "paymentTable", "categoryTable",'reqTable');
+  // console.log("Clicked on Product");
+  document.getElementById("overlayButton").classList.add("hide");
+  document.getElementById("productOverlayButton").classList.remove("hide");
+
+  displayAllProducts()
+}
+
+function handleReq() {
+  toggleVisibility('reqTable',"productTable", "userTable", "paymentTable", "categoryTable");
+  // console.log("Clicked on Product");
+  document.getElementById("overlayButton").classList.add("hide");
+  document.getElementById("productOverlayButton").classList.add("hide");
+
+  displayAllRequests()
+}
+
+
+
+
+async function getAllPayments(){
+  try{
+    const res =await fetch('https://asap-new-backend.vercel.app/getAllPayments',{
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    if(!res.ok){
+      console.log("error geting payments");
+    }
+    const  data=await res.json()
+    return data.data
+  }
+  catch(err){
+    console.log("error in getting response");
+  }
+}
+
+async function displayPayments() {
+  try {
+    // console.log(users);
+    const paymentData=await getAllPayments()  
+    // console.log(paymentData);
+    const paymentTable = document.getElementById("paymentTableBody");
+    paymentTable.innerHTML = ''
+    // let userName,userEmail;
+    // let index = 0;
+    paymentData&&paymentData.forEach((user,index) => {    
+        // userName=json.stringify(user.userId.email)  
+        const userEmail = user.userId ? (user.userId.email ? user.userId.email : 'N/A') : 'N/A';  
+        const userName = user.userId ? (user.userId.Name ? user.userId.Name : 'N/A') : 'N/A';  
+        const userNumber = user.userId ? (user.userId.phoneNumber ? user.userId.phoneNumber : 'N/A') : 'N/A';  
+        const row = `<tr>
+          <th scope="row">${index+1}</th>
+          <th scope="row">${userName}</th>
+          <th scope="row">${userEmail}</th>
+          <th scope="row">${userNumber}</th>
+          <th scope="row">${user.isPaid}</th>
+          
+        </tr>`;
+        paymentTable.innerHTML += row;
+    
+    });
+  } catch (error) {
+    console.error("Error in Payments:", error);
+  }
+}
+
+async function handleLogout(){
+  try{
+      const res=await  fetch("https://asap-new-backend.vercel.app/logout")
+      if(!res){
+        console.log("error loging out");
+      }
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userType");
+      window.location.href="../index.html";
+  }catch(err){
+    console.log("error",err);
+  }
+}
+
+async function getAllCategories(){
+  try {
+    const res=await fetch("https://asap-new-backend.vercel.app/category",{
+      method:"GET",
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    if(!res){
+      console.log("error fetching categories");
+    }
+    const data= await res.json();
+    // console.log(data);
+    return data;
+  } catch (error) {
+    console.log("error",error);
+  }
+}
+
+
+async function displayCategories() {
+  try {
+    // console.log(users);
+    const categoryData=await getAllCategories()  
+    // console.log(paymentData);
+    // console.log(categoryData);
+    const categoryTable = document.getElementById("categoryTableBody");
+    categoryTable.innerHTML = ''
+   
+
+    // let userName,userEmail;
+    // let index = 0;
+    categoryData&&categoryData.forEach((user,index) => {    
+        // userName=json.stringify(user.userId.email) 
+        if(user.isDeleted!==true){
+          
+          // console.log(user.Title);
+             const row = `<tr>
+               
+               <th scope="row">${user.Title}</th>
+               <td><button class='btn btn-primary' onclick='deleteCategory("${user._id}")'>Delete</button></td>
+               
+                       
+             </tr>`;
+             categoryTable.innerHTML += row;
+        } 
+      
+        
+    });
+  } catch (error) {
+    console.error("Error in Category:", error);
+  }
+}
+
+
+async function deleteCategory(categoryId) {
+  try {
+    const res = await fetch(`https://asap-new-backend.vercel.app/deleteCategory/${categoryId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json"
+        
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("Error deleting category");
+    }
+    displayCategories()
+  } catch (error) {
+    console.error("Error deleting category:", error.message);
+  }
+}
+
+
+
+async function getAllProducts(){
+  try {
+    const res=await fetch("https://asap-new-backend.vercel.app/product",{
+      method:"GET",
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    if(!res){
+      console.log("error fetching products");
+    }
+    const data= await res.json();
+    // console.log(data);
+    // console.log(data);
+    return data.products;
+  } catch (error) {
+    console.log("error",error);
+  }
+}
+
+async function displayAllProducts() {
+  try {
+    // console.log(users);
+    const productData=await getAllProducts()  
+
+    const productTable = document.getElementById("productTableBody");
+    productTable.innerHTML = ''
+   
+    productData&&productData.forEach((user,index) => {    
+        
+        if(user.isDeleted!==true){
+          
+          // console.log(user.Title);
+             const row = `<tr>
+               
+               <th scope="row">${user.name}</th>
+               <td><button class='btn btn-primary' onclick='deleteProduct("${user._id}")'>Delete</button></td>
+               
+                       
+             </tr>`;
+             productTable.innerHTML += row;
+        } 
+      
+        
+    });
+  } catch (error) {
+    console.error("Error in Products:", error);
+  }
+}
+
+
+async function deleteProduct(productId) {
+  try {
+    const res = await fetch(`https://asap-new-backend.vercel.app/deleteProduct/${productId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json"
+        
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("Error deleting category");
+    }
+    displayAllProducts()
+  } catch (error) {
+    console.error("Error deleting category:", error.message);
+  }
+}
+
+
+
+
+
+// getAllProducts()
+
+
+
+
+function openOverlay() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+function closeOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+async function submitValues() {
+  var Title= document.getElementById("inputField1").value;
+  var image = document.getElementById("inputField2").value;
+try{
+  const res=await  fetch('https://asap-new-backend.vercel.app/Category',{
+    method:'POST',
+    headers:{'Content-Type':'Application/JSON'},
+    body: JSON.stringify({Title,image})
+  })
+  if(!res.ok){throw new Error('Could not create Category')}
+  displayCategories()
+}catch(err){
+  console.log("err",err);
+}
+
+
+
+  // Do something with the submitted values
+  // console.log("Value 1:", value1);
+  // console.log("Value 2:", value2);
+
+  closeOverlay();
+}
+
+function openProductOverlay() {
+  document.getElementById("productOverlay").style.display = "block";
+  populateCategoryOptions()
+
+}
+
+function closeProductOverlay() {
+  document.getElementById("productOverlay").style.display = "none";
+}
+
+async function submitProduct() {
+  var name = document.getElementById("productName").value;
+  var image = document.getElementById("productPrice").value;
+  var categoryId = document.getElementById("productCategory").value;
+  
+  // Do something with the submitted product information
+  try{
+    const res=await fetch("https://asap-new-backend.vercel.app/product",{
+      method:"POST",
+      headers:{'Content-Type':'Application/JSON'},
+      body: JSON.stringify({name,image,categoryId})
+    })
+    if (!res.ok) throw new Error("error submiting Product")
+    displayAllProducts()
+  }catch(err){
+    console.log("error ",err);
+  }
+ 
+  closeProductOverlay();
+}
+
+
+async function populateCategoryOptions() {
+  try {
+    const categories = await getAllCategories();
+    // console.log(categories);
+    const selectElement = document.getElementById("productCategory");
+
+    // Clear existing options
+    selectElement.innerHTML = "";
+
+    // Add default option
+    const defaultOption = document.createElement("option");
+    defaultOption.text = "Select Category";
+    selectElement.add(defaultOption);
+
+    // Add options for each category
+    categories.forEach(category => {
+      const option = document.createElement("option");
+      option.value = category._id; // Assuming category has an "_id" property
+      option.text = category.Title; // Assuming category has a "Title" property
+      selectElement.add(option);
+    });
+  } catch (error) {
+    console.error("Error populating categories:", error);
+  }
+}
+
+
+
+async function getAllRequests(){
+  try{
+    const res =await fetch('https://asap-new-backend.vercel.app/getAllRequests',{
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    })
+    if(!res.ok){
+      console.log("error geting requests");
+    }
+    const  data=await res.json()
+    return data.data
+  }
+  catch(err){
+    console.log("error",err.message);
+  }
+}
+
+
+
+async function displayAllRequests() {
+  try {
+    // console.log(users);
+    const reqData=await getAllRequests()  
+    // console.log(reqData);
+    const reqTable = document.getElementById("reqTableBody");
+    reqTable.innerHTML = ''
+   
+    reqData && reqData.reverse().forEach((user,index) => {    
+            // console.log(user.Title);
+            // console.log(user.status);
+            // console.log(user.userId.Name);
+             const row = `<tr>       
+          
+              <td scope="row">${user.userId?.Name}</td> 
+              <td scope="row">${user.userId?.email}</td>
+              <td scope="row">${user.userId?.phoneNumber}</td>
+              <td scope="row">${user.status}</td>
+              <td><button class='btn btn-primary' onclick='updateReq("${user._id}","${user.userId._id}", "accept")'>Accept</button></td>
+              <td><button class='btn btn-primary' onclick='updateReq("${user._id}","${user.userId._id}", "reject")'>Reject</button></td>
+
+
+
+             </tr>`;
+             reqTable.insertAdjacentHTML("beforeend",row)
+    });
+  } catch (error) {
+    console.error("Error in Products:", error);
+  }
+}
+
+
+async function updateReq(id,userId, action) {
+    // Define the request data based on the action (accept or reject)
+    const requestData = {
+        status: action === 'accept' ? 'accepted' : 'rejected',
+        userId:userId
+    };
+
+    // console.log(requestData.userId);
+    const res=await fetch(`https://asap-new-backend.vercel.app/updateReq/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        displayAllRequests()
+        // console.log(userId);
+        return response.json();
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+
+
+// getAllCategories()
+window.onload = checkAccess();
+  </script>
+</body>
+</html>

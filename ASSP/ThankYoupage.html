@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAP</title>
+
+    <!-- swiper js cdn link -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+
+    <!-- Custom CSS link -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awsome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Custom Mouse Cursor using kursor.js-->
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
+    <link rel="icon" href="images/logo.png" type="image/gif" sizes="16x16">
+</head>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/65099051b1aaa13b7a77b00f/1hamlng4o';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
+
+
+<body>
+    <!-- Header Section Start -->
+
+    <header class="header">
+        <a href="#"  class="logo">
+            <img src="/images/logoo.png" alt="ASAP"  style="width:70px;height:50px;">
+        </a>
+
+        <nav class="navbar">
+            <a href="./index.html">Home</a>
+            <a href="#thank-you">Services</a>
+            <a href="./Login And Registration.html">Login</a>
+            <a href="./BecomeSeller.html">Become a Seller?</a>
+        </nav>
+
+        <div class="icons">
+            <div class="fas fa-bars" id="menu-btn"></div>
+            <div class="fas fa-search" id="search-btn"></div>
+            <div class="fas fa-user" id="login-btn"></div>
+            <div class="fas fa-sign-out-alt" id="logout-btn"></div>
+        </div>
+        <script>
+            // Add event listener to the logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Fetch request to logout endpoint
+                fetch('https://asap-new-backend.vercel.app/logout', {
+                    method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token') // Assuming token is stored in localStorage
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to logout');
+            }
+            // Clear token from localStorage upon successful logout
+            localStorage.removeItem('token');
+            // Clear user ID from localStorage or memory
+            localStorage.removeItem('userId'); // Assuming user ID is stored in localStorage
+            alert("Your account is Logged out. Thank You!")
+            // Redirect to login page or perform other actions as needed
+            window.location.href = './index.html'; // Redirect to login page
+
+        })
+        .catch(error => {
+            console.error('Error logging out:', error);
+            // Handle error accordingly
+        });
+    });
+        </script>
+        <form action="" class="search-form">
+            <input type="search" id="search-box" placeholder="Search here...">
+            <label for="search-box" class="fas fa-search"></label>
+        </form>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Banner Section Start -->
+
+    <section class="home" id="home">
+        <div class="content">
+            <h3 style="color: white;"><span>Quick</span> and <span>Quality </span>Services for You</h3>
+            <p style="color: white;">Welcome to ASSP - Your Premier Destination for Quick and Quality Services. Experience Tailored Solutions Designed Just For You</p>
+            <a style="color: white; border-color: white;" href="#" class="btn">Book now</a>
+        </div>
+    </section>
+
+    <!-- Banner Section End -->
+
+    <!-- Products Section Start -->
+
+    
+<!-- Thank You Section Start -->
+<section class="thank-you" style="text-align: center; margin-top: 0px;">
+    <div class="thank-you-content">
+        <h1 style="color: green; font-size: 70px;">Thank You</h1>
+        <div class="checkmark-icon" style="color: green; font-size: 100px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="short-line" style="width: 50px; height: 5px; background-color: green; margin: 10px auto;"></div>
+        <p style="font-size: 18px;">We appreciate your business. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.</p>
+    </div>
+</section>
+<!-- Thank You Section End -->
+
+ 
+    
+<section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <!-- <h3>As Soon As Possible </h3> -->
+            <a href="#"  class="logo">
+                <img src="./Images/new.png" alt="ASAP"  style="width:120px;height:50px;">
+            </a>
+            <p>Get Quick and Quality Services Tailored Just For You!</p>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+                <a href="#" class="fab fa-linkedin"></a>
+            </div>
+            <div>
+                <!-- <a style="color: rgb(17, 1, 1); border-color: white;" href="./admin-panel/index.html" class="btn">Administrator</a> -->
+            </div>
+        </div>
+        <div class="box">
+            <h3>contact info</h3>
+            <a href="#" class="links"> <i class="fas fa-phone"></i> +13016060756 </a>
+            <a href="#" class="links"> <i class="fas fa-phone"></i> +13016060756 </a>
+            <a href="#" class="links"> <i class="fas fa-envelope"></i> inquiriesesa@gmail.com </a>
+            <a href="#" class="links"> <i class="fas fa-map-marker-alt"></i> Maryland, USA </a>
+        </div>
+        <div class="box">
+            <h3>quick links</h3>
+            <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Home </a>
+            <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Features </a>
+            <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Services </a>
+        </div>
+        <div class="box">
+            <h3>Explore Services</h3>
+            <a href="https://getasapservice.com/Product.html?categoryId=655d9cebc4dfadac49f74de9" class="links"> <i class="fas fa-arrow-right"></i> Education </a>
+            <a href="https://getasapservice.com/Product.html?categoryId=655d9d34c4dfadac49f74def" class="links"> <i class="fas fa-arrow-right"></i> Administrative</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=655d9dcbc4dfadac49f74df3" class="links"> <i class="fas fa-arrow-right"></i> HouseHold</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=655d9e11c4dfadac49f74df6" class="links"> <i class="fas fa-arrow-right"></i> HealthCare</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=656242cc962dfa610e66c992" class="links"> <i class="fas fa-arrow-right"></i> Construction</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=65c1244139044b23990949a7" class="links"> <i class="fas fa-arrow-right"></i> Attorney</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=65c12892bf65e74a325705a6" class="links"> <i class="fas fa-arrow-right"></i> Human Resource Consulting</a>
+            <a href="https://getasapservice.com/Product.html?categoryId=65c12ab5577c446874171e3e" class="links"> <i class="fas fa-arrow-right"></i> Accounting and finance</a>
+
+
+        </div>
+    </div>
+    <div class="credit"><span></span> all rights reserved </div>
+</section>
+
+    <!-- Footer Section End -->
+
+
+    <!-- Custom Mouse Cursor using kursor.js Start -->
+        <!-- Not apply in responsive design -->
+    <script>
+        new kursor({
+            type: 1
+        })
+    </script>
+    
+
+    <!-- Another Custom Cursor End -->
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+    <!-- Swiper js link -->
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+
+    
+</body>
+</html>

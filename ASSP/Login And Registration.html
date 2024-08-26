@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login In/Sign Up</title>
+    <link type="text/css" rel="stylesheet" href="./css/Login And Registration.css">
+    <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <section class="imp">
+      <section>
+        <div class="login show" id="one">
+          <div class="textbox slide-left2">
+            <div class="head">
+              <h1>Sign In</h1>
+              <ul>
+                <li>
+                  <i class="fab fa-facebook-f" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-google-plus-g" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-linkedin-in" style="cursor: pointer;"></i>
+                </li>
+              </ul>
+              <h3 style="cursor: pointer;">or use your E-mail ID</h3>
+            </div>
+            <form id="login-form">
+              <input type="text" placeholder="EMAIL" required>
+              <input type="password" placeholder="PASSWORD" required>
+              <button id="b">
+                <a href="./forgotPassword.html" style="cursor: pointer;">Forgot password?</a>
+              </button>
+              <button type="submit" class="sign_in_btn">Submit</button>
+              <button id="b">
+                <a href="./BecomeSeller.html" class="c">Join as a Professional?</a>
+
+              </button>
+
+            </form>
+          </div>
+        </div>
+        <div class="sec show" id="two">
+          <div class="textbox slide-left">
+            <h1>Not a member?</h1>
+            <p>Signup to find services</p>
+            <button id="b1" style="cursor: pointer;" class="prompt_sign_up">SIGN UP</button>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="sec hide" id="three">
+          <div class="textbox slide-left">
+            <h1>Already a member?</h1>
+            <p>Login to keep shopping.</p>
+            <button id="b2" style="cursor: pointer;" class="prompt_sign_in">SIGN IN</button>
+          </div>
+        </div>
+        <div class="login hide" id="four">
+          <div class="textbox slide-right">
+            <div class="head">
+              <h1>Create Account</h1>
+              <ul>
+                <li>
+                  <i class="fab fa-facebook-f" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-google-plus-g" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-linkedin-in" style="cursor: pointer;"></i>
+                </li>
+              </ul>
+              <h3 style="cursor: pointer;">or use your E-mail ID</h3>
+            </div>
+            <form id="signup-form" >
+              <input type="text" placeholder="Name" required style="margin-bottom: 8px;">
+            
+              <input type="text" placeholder="EMAIL" required style="margin-bottom: 8px;">
+              <!-- <br> -->
+              <input type="password" placeholder="PASSWORD" required style="margin-bottom: 8px;">
+              <!-- <br> -->
+              <input type="text" placeholder="Zip Code" required style="margin-bottom: 8px;">
+              <!-- <br> -->
+              <input type="text" placeholder="PHONE NO." required style="margin-bottom: 8px;">
+              <!-- <br> -->
+              <input type="text"  placeholder="City" style="margin-bottom: 8px;" >
+              <!-- <br> -->
+              <input type="text"  placeholder="Country"  >
+              <!-- <br> -->
+              <button type="submit" class="sign_up_btn" >Submit</button>
+              <!-- <button type="submit" style="background-color: black; cursor: pointer;" class="sign_up_btn">Submit</button> -->
+            </form>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <script>
+        
+        var a, b, c, d;
+      a = document.getElementById("one");
+      b = document.getElementById("two");
+      c = document.getElementById("three");
+      d = document.getElementById("four");
+      var r = document.getElementById("b1");
+      var s = document.getElementById("b2");
+
+      r.onclick = function () {
+        d.classList.add("mover");
+        a.classList.add("hide");
+        a.classList.remove("show");
+        c.classList.add("movel2");
+        b.classList.add("hide");
+        b.classList.remove("show");
+        c.classList.remove("hide");
+        c.classList.add("show");
+        d.classList.remove("hide");
+        d.classList.add("show");
+      };
+s.onclick = function ()
+{
+    b.classList.add("mover2");
+    c.classList.add("hide");
+    c.classList.remove("show");
+    a.classList.add("movel");
+    d.classList.add("hide");
+    d.classList.remove("show");
+    b.classList.remove("hide");
+    b.classList.add("show");
+    a.classList.remove("hide");
+    a.classList.add("show");
+}
+async function fetchUserDetails() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("https://asap-new-backend.vercel.app/users", {
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (response.status === 200) {
+        const userData = await response.json();
+      } else {
+        const data = await response.json();
+        console.log("Failed to fetch user details: " + data.message);
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching user details: " + error.message);
+    }
+  }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/cjs/index.js"></script> -->
+
+<script>
+  async function loginUser(email, password) {
+    try {
+      const response = await fetch("https://asap-new-backend.vercel.app/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+      if (response.status === 200) {
+        const responseData = await response.json();
+        // console.log(responseData);
+        const userId=responseData.userId
+        const userType=responseData.userType
+        if (responseData.payStatus && responseData.payStatus.isPaid !== undefined) {
+          const isPaid = responseData.payStatus.isPaid;
+          localStorage.setItem("payStatus", isPaid);
+        }
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("userType", userType);
+        // console.log(payStatus);
+        // const token = responseData.token;
+        // const decodedToken = jwtDecode(token);
+        // console.log(userType);
+        // const userId = decodedToken.userId;
+        // const userType = decodedToken.userType;
+        // console.log("here");
+      // if (userType !== "USER") {
+      //   alert("Login failed: User is not authorized. Please check your credentials.");
+      //   return;
+      // }
+        // localStorage.setItem("userId", userId);
+        if(userType==="Admin"){
+          window.location.href = "admin-panel/adminDashboard.html";
+          
+        }else{
+          window.location.href = "index.html";
+
+        }
+
+      } else {
+        const data = await response.json();
+        alert("Login failed: " + data.message);
+        console.log("Login failed: " + JSON.stringify(data));
+      }
+    } catch (error) {
+      alert("An error occurred during login. Please try again later.");
+      console.error("An error occurred during login: " + error.message);
+    }
+  }
+  async function signupUser(name, email, password, phoneNumber,zipCode) {
+  try {
+    const response = await fetch("https://asap-new-backend.vercel.app/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Name: name,
+        email: email,
+        password: password,
+        phoneNumber: phoneNumber,
+        zipCode:zipCode
+        // address: address,
+      }),
+    });
+
+    if (response.status === 200) {
+      // Registration successful
+      const responseData = await response.json();
+      alert("Signup successful: " + responseData.message);
+
+      // Clear the form
+      document.getElementById("signup-form").reset();
+
+      // You can also redirect to the login page if needed
+      window.location.href = "./Login And Registration.html";
+    } else {
+      // Registration failed
+      const data = await response.json();
+      alert("Signup failed: " + data.message);
+    }
+  } catch (error) {
+    console.error("An error occurred during signup: " + error.message);
+    alert("An error occurred during signup. Please try again later.");
+  }
+}
+
+
+      const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const email = loginForm.querySelector('input[type="text"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
+      loginUser(email, password);
+    }); 
+    signupForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const name = signupForm.querySelector('input[placeholder="Name"]').value;
+      const zipCode = signupForm.querySelector('input[placeholder="Zip Code"]').value;
+      const email = signupForm.querySelector('input[placeholder="EMAIL"]').value;
+      const password = signupForm.querySelector('input[placeholder="PASSWORD"]').value;
+      const phoneNumber = signupForm.querySelector('input[placeholder="PHONE NO."]').value;
+      // const address = signupForm.querySelector('input[placeholder="Home Address"]').value;
+      signupUser(name, email, password, phoneNumber,zipCode);
+    });
+      </script>
+  <!-- <script src="../node-backend/backend/node_modules/jwt-decode/build/cjs/index.js"></script> -->
+<!-- Include the jwt-decode script -->
+
+<!-- Include the typescript definitions (types) -->
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/cjs/index.d.ts"></script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Chat</title>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="testing.css">
+  <style>
+    #chat-messages {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      max-height: 300px; /* Set a maximum height for the chat box to enable scrolling */
+    }
+
+    #chat-messages li {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    .you {
+      align-self: flex-end;
+    }
+
+    .me {
+      align-self: flex-start;
+    }
+
+    .entete {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .green {
+      background-color: #4caf50; /* Change the color based on your preference */
+    }
+
+    .blue {
+      background-color: #2196f3; /* Change the color based on your preference */
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      margin-left: 5px; /* Adjust the spacing between the triangle and the message */
+    }
+
+    .you .triangle {
+      border-width: 0 10px 10px 10px;
+      border-color: transparent transparent #4caf50 transparent; /* Match the sent message color */
+    }
+
+    .me .triangle {
+      border-width: 10px 10px 0 10px;
+      border-color: #2196f3 transparent transparent transparent; /* Match the received message color */
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 8px;
+      word-wrap: break-word;
+      max-width: 70%; /* Adjust the maximum width of the message box */
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <aside>
+      <header>
+        <input type="text" placeholder="search">
+      </header>
+      <ul id="sellers-list">
+        <!-- Sellers list will be dynamically populated here -->
+      </ul>
+    </aside>
+    <main>
+      <header id="chat-header">
+        <img src="" alt="" id="chat-image">
+        <div>
+          <h2 id="chat-name"></h2>
+          <!-- <h3>already 1902 messages</h3> -->
+          <h3>Available</h3>
+        </div>
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_star.png" alt="">
+      </header>
+      <ul id="chat-messages">
+        <!-- <li class="you">
+          <div class="entete">
+            <span class="status green"></span>
+            <h2>Vincent</h2>
+            <h3>10:12AM, Today</h3>
+          </div>
+          <div class="triangle"></div>
+          <div class="message">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+          </div>
+        </li>
+        <li class="me">
+          <div class="entete">
+            <h3>10:12AM, Today</h3>
+            <h2>Vincent</h2>
+            <span class="status blue"></span>
+          </div>
+          <div class="triangle"></div>
+          <div class="message">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+          </div>
+        </li>  -->    
+      </ul> 
+
+      <footer>
+        <textarea placeholder="Type your message"></textarea>
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png" alt="">
+        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png" alt="">
+        <a href="#">Send</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch sellers from the API
+        fetch('https://assp-api.vercel.app/users')
+            .then(response => response.json())
+            .then(users => {
+                // Get the sellers list element
+                const sellersList = document.getElementById('sellers-list');
+
+                // Iterate over the retrieved users and add sellers to the list
+                users.forEach(user => {
+                    if (user.userType === 'USER') {
+                        const sellerElement = document.createElement('li');
+                        sellerElement.classList.add('seller');
+                        sellerElement.setAttribute('data-id', user._id);
+
+                        // Use a placeholder image for sellers (replace with actual images)
+                        const sellerImage = document.createElement('img');
+                        sellerImage.src = 'https://w7.pngwing.com/pngs/695/655/png-transparent-head-the-dummy-avatar-man-tie-jacket-user.png'; // Placeholder image URL
+                        sellerImage.alt = user.Name;
+                        sellerImage.style.width = '50px';  // Set width to 50 pixels
+                        sellerImage.style.height = '50px'; // Set height to 50 pixels
+                        sellerElement.appendChild(sellerImage);
+
+                        const sellerDetails = document.createElement('div');
+                        const sellerName = document.createElement('h2');
+                        sellerName.textContent = user.Name;
+                        sellerDetails.appendChild(sellerName);
+
+                        sellerElement.appendChild(sellerDetails);
+                        sellersList.appendChild(sellerElement);
+
+                        // Add click event listener to open the chat with the selected seller
+                        sellerElement.addEventListener('click', () => openChat(user));
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching sellers:', error));
+    });
+
+    async function openChat(user) {
+        const sellerId = localStorage.getItem("userId");
+        const buyerId = user._id;
+        // Set the current seller name and image in the chat box header
+        const chatImage = document.getElementById('chat-image');
+        const chatName = document.getElementById('chat-name');
+
+        chatImage.src = 'https://w7.pngwing.com/pngs/695/655/png-transparent-head-the-dummy-avatar-man-tie-jacket-user.png'; // Replace with the actual image URL
+        chatImage.alt = user.Name;
+        chatImage.style.width = '50px';  // Set width to 50 pixels
+        chatImage.style.height = '50px'; // Set height to 50 pixels
+        chatName.textContent = user.Name;
+
+        // Fetch messages for the selected buyer and seller
+        await fetchMessages(buyerId, sellerId);
+    }
+
+    async function fetchMessages(buyerId, sellerId) {
+      try {
+        const response = await fetch(`https://assp-api.vercel.app/messages?userId=${buyerId}&sellerId=${sellerId}`);
+        const messages = await response.json();
+        const chatMessagesElement = document.getElementById('chat-messages');
+        chatMessagesElement.innerHTML = '';
+
+        messages.forEach(message => {
+          const isUserMessage = message.sender === buyerId; // Check if the message is from the buyer
+          const messageElement = document.createElement('li');
+          messageElement.className = isUserMessage ? 'you' : 'me';
+
+          const enteteElement = document.createElement('div');
+          enteteElement.classList.add('entete');
+
+          if (isUserMessage) {
+            enteteElement.innerHTML = `
+              <span class="status green"></span>
+              <h2>${message.senderName}</h2>
+              <h3>${formatTimestamp(message.timestamp)}</h3>
+            `;
+          } else {
+            enteteElement.innerHTML = `
+              <h3>${formatTimestamp(message.timestamp)}</h3>
+              <h2>${message.senderName}</h2>
+              <span class="status blue"></span>
+            `;
+          }
+
+          const triangleElement = document.createElement('div');
+          triangleElement.classList.add('triangle');
+
+          const messageContentElement = document.createElement('div');
+          messageContentElement.classList.add('message');
+          messageContentElement.textContent = message.message;
+
+          messageElement.appendChild(enteteElement);
+          messageElement.appendChild(triangleElement);
+          messageElement.appendChild(messageContentElement);
+
+          chatMessagesElement.appendChild(messageElement);
+        });
+
+        chatMessagesElement.scrollTop = chatMessagesElement.scrollHeight;
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    }
+
+    function formatTimestamp(timestamp) {
+      const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+      return new Date(timestamp).toLocaleString('en-US', options);
+    }
+
+    // Call fetchMessages with your buyerId and sellerId
+    // fetchMessages(buyerId, sellerId);</script>
+</body>
+</html>

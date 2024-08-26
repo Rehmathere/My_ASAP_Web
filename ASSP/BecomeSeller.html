@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login In/Sign Up</title>
+    <link type="text/css" rel="stylesheet" href="./css/Login And Registration.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://kit.fontawesome.com/5471644867.js" crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    </head>
+  <body>
+    <section class="imp">
+      <section>
+        <div class="login show" id="one">
+          <div class="textbox slide-left2">
+            <div class="head">
+              <h1>Sign In</h1>
+              <ul>
+                <li>
+                  <i class="fab fa-facebook-f" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-google-plus-g" style="cursor: pointer;"></i>
+                </li>
+                <li>
+                  <i class="fab fa-linkedin-in" style="cursor: pointer;"></i>
+                </li>
+              </ul>
+              <h3 style="cursor: pointer;">or use your E-mail ID</h3>
+            </div>
+            <form id="login-form">
+              <input type="text" placeholder="EMAIL" required>
+              <input type="password" placeholder="PASSWORD" required>
+              <button id="b">
+                <a href="./forgotPassword.html" style="cursor: pointer;">Forgot password?</a>
+              </button>
+              <button type="submit" class="sign_in_btn">Submit</button>
+            </form>
+          </div>
+        </div>
+        <div class="sec show" id="two">
+          <div class="textbox slide-left">
+            <h1>Become a Seller ?</h1>
+            <p>Sign up as a seller and start Selling your Services.</p>
+            <button id="b1" style="cursor: pointer;" class="prompt_sign_up">SIGN UP</button>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="sec hide" id="three">
+          <div class="textbox slide-left">
+            <h1>Already a member?</h1>
+            <p>Login to keep shopping.</p>
+            <button id="b2" style="cursor: pointer;" class="prompt_sign_in">SIGN IN</button>
+          </div>
+        </div>
+        <div class="login hide" id="four">
+          <div class="textbox slide-right">
+            <div class="head">
+              <h1>Create Account as a Seller</h1>
+              
+            </div>
+            <div class="signup-scroll" style="height: 600PX; overflow-y: auto;">
+              <form id="signup-form">
+                <div class="input-group">
+                  <div class="half-width">
+                      <input type="text" placeholder="FULL NAME" required>
+                  </div>
+                  <div class="half-width">
+                      <input type="text" placeholder="EMAIL" required>
+                  </div>
+              </div>
+              <div class="input-group">
+                  <div class="half-width">
+                      <input type="text" placeholder="PHONE NO." required>
+                  </div>
+                  <div class="half-width">
+                      <input type="text" placeholder="COUNTRY" required>
+                  </div>
+              </div>
+                <select id="categoryDropdown" required>
+                  <option value="" selected>Select Category</option>
+                  <!-- Categories will be dynamically populated here -->
+              </select>
+              <select id="productDropdown" required>
+                  <option value="" selected>Select Product</option>
+                  <!-- Products will be dynamically populated here based on the selected category -->
+              </select>
+            <div class="input-group">
+              <!-- <div class=""> -->
+                <div class="half-width">
+                  <input type="text" placeholder="CITY" required>
+                </div>
+              <!-- </div> -->
+              <div class="half-width">
+                <input type="Number" placeholder="Experience in years" id="experience" required>
+              </div>
+              
+          </div>
+                <input type="password" placeholder="PASSWORD" required>
+                <input type="text" placeholder="ZIP Code"  required>
+                <input name="" id="details" cols="30" rows="5" placeholder="About Your Self">
+                <!-- <input type="text" placeholder="Description"  required> -->
+                <!-- Remove the map related code -->
+                <input type="hidden" id="categoryIdInput" name="categoryId" value="">
+                <input type="hidden" id="productIdInput" name="productId" value="">
+                <button type="submit" style="cursor: pointer;" class="sign_up_btn">Sign Up</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+<script>
+    var a, b, c, d;
+    a = document.getElementById("one");
+    b = document.getElementById("two");
+    c = document.getElementById("three");
+    d = document.getElementById("four");
+    var r = document.getElementById("b1");
+    var s = document.getElementById("b2");
+
+    r.onclick = function () {
+        d.classList.add("mover");
+        a.classList.add("hide");
+        a.classList.remove("show");
+        c.classList.add("movel2");
+        b.classList.add("hide");
+        b.classList.remove("show");
+        c.classList.remove("hide");
+        c.classList.add("show");
+        d.classList.remove("hide");
+        d.classList.add("show");
+    };
+    s.onclick = function () {
+        b.classList.add("mover2");
+        c.classList.add("hide");
+        c.classList.remove("show");
+        a.classList.add("movel");
+        d.classList.add("hide");
+        d.classList.remove("show");
+        b.classList.remove("hide");
+        b.classList.add("show");
+        a.classList.remove("hide");
+        a.classList.add("show");
+    }
+
+    async function fetchUserDetails() {
+        try {
+            // Get the token from local storage
+            const token = localStorage.getItem("token");
+
+            // Make a GET request to the user details API
+            const response = await fetch("https://asap-new-backend.vercel.app/users", {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+
+            if (response.status === 200) {
+                const userData = await response.json();
+            } else {
+                const data = await response.json();
+            }
+        } catch (error) {
+            console.error("An error occurred while fetching user details: " + error.message);
+        }
+    }
+
+    async function loginUser(email, password) {
+        try {
+            const response = await fetch("https://asap-new-backend.vercel.app/seller-login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        });
+
+        if (response.status === 200) {
+            const responseData = await response.json();
+            const userId = responseData.userId;
+            localStorage.setItem("userId", userId);
+            window.location.href = "./seller-panel/index.html";
+        } else {
+            const data = await response.json();
+            console.log("Login failed: " + data.message);
+        }
+    } catch (error) {
+        console.error("An error occurred during login: " + error.message);
+    }
+}
+
+async function signupUser(name, email, password, phoneNumber, country, city, categoryId, productId, zipCode,experience,details) {
+    try {
+        const response = await fetch("https://asap-new-backend.vercel.app/seller-signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                Name: name,
+                email: email,
+                password: password,
+                phoneNumber: phoneNumber,
+                country: country,
+                city: city,
+                categoryId: categoryId,
+                productId: productId,
+                zipCode: zipCode,
+                experience:experience+" Year(s)",
+                details:details
+            }),
+        });
+
+        if (response.status === 200) {
+            const responseData = await response.json();
+            alert("Signup successful: " + responseData.message);
+            window.location.href = "./BecomeSeller.html";
+        } else {
+            const data = await response.json();
+            console.log("Signup failed: " + data.message);
+        }
+    } catch (error) {
+        console.error("An error occurred during signup: " + error.message);
+    }
+}
+
+// Get DOM elements
+const loginForm = document.getElementById("login-form");
+const signupForm = document.getElementById("signup-form");
+
+loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const email = loginForm.querySelector('input[type="text"]').value;
+    const password = loginForm.querySelector('input[type="password"]').value;
+    loginUser(email, password);
+});
+
+signupForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const name = signupForm.querySelector('input[placeholder="FULL NAME"]').value;
+    const email = signupForm.querySelector('input[placeholder="EMAIL"]').value;
+    const password = signupForm.querySelector('input[placeholder="PASSWORD"]').value;
+    const phoneNumber = signupForm.querySelector('input[placeholder="PHONE NO."]').value;
+    const country = signupForm.querySelector('input[placeholder="COUNTRY"]').value;
+    const city = signupForm.querySelector('input[placeholder="CITY"]').value;
+    const zipCode = signupForm.querySelector('input[placeholder="ZIP Code"]').value;
+    const categoryId = document.getElementById("categoryDropdown").value;
+    const productId = document.getElementById("productDropdown").value;
+    const experience = document.getElementById("experience").value;
+    const details = document.getElementById("details").value;
+    signupUser(name, email, password, phoneNumber, country, city, categoryId, productId, zipCode,experience,details);
+});
+
+// Function to populate categories dropdown
+function populateCategories() {
+    $.ajax({
+        url: 'https://asap-new-backend.vercel.app/Category',
+        type: 'GET',
+        success: function (data) {
+            const categoryDropdown = $('#categoryDropdown');
+            categoryDropdown.empty();
+            categoryDropdown.append('<option value="" selected>Select Category</option>');
+            data.forEach(category => {
+                categoryDropdown.append(`<option value="${category._id}">${category.Title}</option>`);
+            });
+
+            // Add an event listener for category selection
+            categoryDropdown.on('change', function() {
+                const selectedCategoryId = $(this).val();
+                // Call the function to populate products with the selected category ID
+                populateProducts(selectedCategoryId);
+            });
+        },
+        error: function (error) {
+            console.error('Error fetching categories:', error);
+        }
+    });
+}
+
+function populateProducts(categoryId) {
+    $.ajax({
+        url: `https://asap-new-backend.vercel.app/product?categoryId=${categoryId}`,
+        type: 'GET',
+        success: function (data) {
+            const productDropdown = $('#productDropdown');
+            productDropdown.empty();
+            productDropdown.append('<option value="" selected>Select Product</option>');
+            data.products.forEach(product => {
+                productDropdown.append(`<option value="${product._id}">${product.name}</option>`);
+            });
+        },
+        error: function (error) {
+            console.error('Error fetching products:', error);
+        }
+    });
+}
+
+// Call populateCategories when the page loads
+$(document).ready(function() {
+    populateCategories();
+});
+
+</script>
+    </body>
+</html>
+

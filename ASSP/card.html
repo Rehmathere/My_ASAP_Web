@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAP</title>
+    <!-- swiper js cdn link -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <!-- Custom CSS link -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/card.css">
+    <!-- Font Awsome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom Mouse Cursor using kursor.js-->
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
+    <link rel="icon" href="images/logo.png" type="image/gif" sizes="16x16">
+    <script src="https://js.stripe.com/v3/"></script>
+
+</head>
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/65099051b1aaa13b7a77b00f/1hamlng4o';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
+</script>
+<!--End of Tawk.to Script-->
+
+<body>
+    <!-- Header Section Start -->
+
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="./Images/new.png" alt="ASAP" style="width:120px;height:50px;">
+        </a>
+        <nav class="navbar">
+            <a href="./index.html">Home</a>
+            <a href="#thank-you">Services</a>
+            <a href="./Login And Registration.html">Become a Buyer?</a>
+            <a href="./BecomeSeller.html">Become a Seller?</a>
+        </nav>
+        <div class="icons">
+            <div class="fas fa-bars" id="menu-btn"></div>
+            <div class="fas fa-search" id="search-btn"></div>
+            <div class="fas fa-user" id="login-btn"></div>
+            <div class="fas fa-sign-out-alt" id="logout-btn"></div>
+        </div>
+        <script>
+            // Add event listener to the logout button
+            document.getElementById('logout-btn').addEventListener('click', function () {
+                // Fetch request to logout endpoint
+                fetch('https://asap-new-backend.vercel.app/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token') // Assuming token is stored in localStorage
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to logout');
+                        }
+                        // Clear token from localStorage upon successful logout
+                        localStorage.removeItem('token');
+                        // localStorage.removeItem("userId");
+                        localStorage.removeItem("userType");
+                        if (localStorage.payStatus) {
+
+                            localStorage.removeItem("payStatus");
+                        }
+
+                        // Clear user ID from localStorage or memory
+                        localStorage.removeItem('userId'); // Assuming user ID is stored in localStorage
+                        // Log a message in the console indicating successful logout
+                        alert("Your account is Logged out. Thank You!")
+                        // Redirect to login page or perform other actions as needed
+                        window.location.href = './index.html'; // Redirect to login page
+
+                    })
+                    .catch(error => {
+                        console.error('Error logging out:', error);
+                        // Handle error accordingly
+                    });
+            });
+        </script>
+        <form action="" class="search-form">
+            <input type="search" id="search-box" placeholder="Search here...">
+            <label for="search-box" class="fas fa-search"></label>
+        </form>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Banner Section Start -->
+
+    <section class="home" id="home">
+        <div class="content">
+            <h3 style="color: white;"><span>Quick</span> and <span>Quality </span>Services for You</h3>
+            <p style="color: white;">Welcome to ASSP - Your Premier Destination for Quick and Quality Services.
+                Experience Tailored Solutions Designed Just For You</p>
+            <a style="color: white; border-color: white;" href="#" class="btn">Book now</a>
+        </div>
+    </section>
+
+    <!-- Banner Section End -->
+    <!-- Add this to your HTML file where you want to display the user ID -->
+    <div id="loggedInUserId"></div>
+    <div id="productIdDisplay"></div>
+    <!-- Products Section Start -->
+
+    <section class="products" id="products">
+        <h1 class="heading">Service <span>Providers</span> </h1>
+
+        <div class="swiper product-slider" id="product-slider">
+            <!-- First row -->
+            <div class="swiper-container" id="row1-slider">
+                <div class="swiper-wrapper" id="row1-wrapper">
+                    <!-- Product cards for the first row will be added here dynamically -->
+                </div>
+            </div>
+
+            <!-- Second row -->
+            <div class="swiper-container" id="row2-slider">
+                <div class="swiper-wrapper" id="row2-wrapper">
+                    <!-- Product cards for the second row will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Products Section End -->
+    <!-- Overlay and Modal -->
+    <div class="overlay" id="modalOverlay">
+        <div class="modal">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Booking Information</h2>
+            <div id="productDetails" class="modal-content"></div>
+            <div id="userDetails" class="modal-content"></div>
+            <div class="modal-buttons">
+                <a class="btn cancel-btn" onclick="closeModal()">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section Start -->
+
+    <section class="footer">
+        <div class="box-container">
+            <div class="box">
+                <!-- <h3>As Soon As Possible </h3> -->
+                <a href="#" class="logo">
+                    <img src="./Images/new.png" alt="ASAP" style="width:120px;height:50px;">
+                </a>
+                <p>Get Quick and Quality Services Tailored Just For You!</p>
+                <div class="share">
+                    <a href="#" class="fab fa-facebook-f"></a>
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                    <a href="#" class="fab fa-linkedin"></a>
+                </div>
+                <div>
+                    <!-- <a style="color: rgb(17, 1, 1); border-color: white;" href="./admin-panel/index.html" class="btn">Administrator</a> -->
+                </div>
+            </div>
+            <div class="box">
+                <h3>contact info</h3>
+                <a href="#" class="links"> <i class="fas fa-phone"></i> +13016060756 </a>
+                <a href="#" class="links"> <i class="fas fa-phone"></i> +13016060756 </a>
+                <a href="#" class="links"> <i class="fas fa-envelope"></i> inquiriesesa@gmail.com </a>
+                <a href="#" class="links"> <i class="fas fa-map-marker-alt"></i> Maryland, USA </a>
+            </div>
+            <div class="box">
+                <h3>quick links</h3>
+                <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Home </a>
+                <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Features </a>
+                <a href="#" class="links"> <i class="fas fa-arrow-right"></i> Services </a>
+            </div>
+            <div class="box">
+                <h3>Explore Services</h3>
+                <a href="https://getasapservice.com/Product.html?categoryId=655d9cebc4dfadac49f74de9" class="links"> <i
+                        class="fas fa-arrow-right"></i> Education </a>
+                <a href="https://getasapservice.com/Product.html?categoryId=655d9d34c4dfadac49f74def" class="links"> <i
+                        class="fas fa-arrow-right"></i> Administrative</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=655d9dcbc4dfadac49f74df3" class="links"> <i
+                        class="fas fa-arrow-right"></i> HouseHold</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=655d9e11c4dfadac49f74df6" class="links"> <i
+                        class="fas fa-arrow-right"></i> HealthCare</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=656242cc962dfa610e66c992" class="links"> <i
+                        class="fas fa-arrow-right"></i> Construction</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=65c1244139044b23990949a7" class="links"> <i
+                        class="fas fa-arrow-right"></i> Attorney</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=65c12892bf65e74a325705a6" class="links"> <i
+                        class="fas fa-arrow-right"></i> Human Resource Consulting</a>
+                <a href="https://getasapservice.com/Product.html?categoryId=65c12ab5577c446874171e3e" class="links"> <i
+                        class="fas fa-arrow-right"></i> Accounting and finance</a>
+
+
+            </div>
+        </div>
+        <div class="credit"><span></span> all rights reserved </div>
+    </section>
+
+    <!-- Footer Section End -->
+
+    <!-- Custom Mouse Cursor using kursor.js Start -->
+    <!-- Not apply in responsive design -->
+    <script>
+        new kursor({
+            type: 1
+        })
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+    <!-- Swiper js link -->
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+    <!-- Custom JS link -->
+    <script src="js/style.js"></script>
+    <script>
+
+
+        function closeModal() {
+            // Hide the modal
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+        // Fetch the API data
+
+
+        fetch('https://asap-new-backend.vercel.app/getallsellers')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                // Split the data into two rows
+                let middleIndex = 0;
+                let row1Data = 0;
+                let row2Data = 0;
+                // let middleIndex=0;
+                let filteredSellers;
+                if (city && zipCode) {
+                    filteredSellers = data.filter(seller => seller.product === productId && seller.city === city && seller.zipCode === zipCode);
+                } else if (city || zipCode) {
+                    filteredSellers = data.filter(seller => seller.product === productId && (seller.city === city || seller.zipCode === zipCode));
+                }
+                else {
+
+                    filteredSellers = data.filter(seller => seller.product === productId);
+                }
+                console.log(filteredSellers.length)
+                if (filteredSellers.length > 4) {
+                    middleIndex = Math.ceil(filteredSellers.length / 2);
+                    row1Data = filteredSellers.slice(0, middleIndex);
+                    row2Data = filteredSellers.slice(middleIndex);
+
+                }
+                else {
+                    middleIndex = Math.ceil(filteredSellers.length);
+                    row1Data = filteredSellers.slice(0, middleIndex);
+                    row2Data = filteredSellers.slice(middleIndex);
+
+                }
+
+                // Get the product slider container
+                const productSlider = document.getElementById('product-slider');
+
+                // Create Swiper containers for the rows
+                const row1Slider = new Swiper('#row1-slider', {
+                    slidesPerView: 3, // Show 4 cards in one row
+                    spaceBetween: 20, // Adjust the spacing as needed
+                    wrapperClass: 'swiper-wrapper',
+                    slideClass: 'swiper-slide',
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+
+                const row2Slider = new Swiper('#row2-slider', {
+                    slidesPerView: 3, // Show 4 cards in one row
+                    spaceBetween: 20, // Adjust the spacing as needed
+                    wrapperClass: 'swiper-wrapper',
+                    slideClass: 'swiper-slide',
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+
+                // Function to create product cards and add them to the Swiper containers
+                // Function to create product cards and add them to the Swiper containers
+                const createProductCards = (data, swiperContainer) => {
+                    
+                    data.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.classList.add('swiper-slide', 'box', 'swiper-slide');
+
+                        // Use a static image for all products
+                        const productImage = document.createElement('img');
+                        productImage.src = product.image?product.image: 'https://staffscapes.com/wp-content/uploads/2018/11/employment-verification.png'; // Replace with your image URL
+                        productImage.alt = product.Name;
+
+                        const productName = document.createElement('h3');
+                        productName.textContent = product.Name;
+
+                        const nameDetailsDiv = document.createElement('div');
+                        nameDetailsDiv.classList.add('nameDetailsDiv');
+
+
+                        // const location = product.location;
+                        // const latitude = location.coordinates[1];
+                        // const longitude = location.coordinates[0];
+
+                        // Create additional elements for the product information
+                        const phoneNumber = document.createElement('p');
+                        phoneNumber.style.fontSize = '15px';
+                        const phoneNumberLabel = document.createElement('span');
+                        phoneNumberLabel.textContent = 'Phone Number: ';
+                        phoneNumberLabel.style.fontWeight = 'bold';
+                        phoneNumber.appendChild(phoneNumberLabel);
+                        phoneNumber.innerHTML += product.phoneNumber;
+
+                        const email = document.createElement('p');
+                        email.style.fontSize = '15px';
+                        const emailLabel = document.createElement('span');
+                        emailLabel.textContent = 'Email: ';
+                        emailLabel.style.fontWeight = 'bold';
+                        email.appendChild(emailLabel);
+                        email.innerHTML += product.email;
+
+                        const city = document.createElement('p');
+                        city.style.fontSize = '15px';
+                        const cityLabel = document.createElement('span');
+                        cityLabel.textContent = 'City: ';
+                        cityLabel.style.fontWeight = 'bold';
+                        city.appendChild(cityLabel);
+                        city.innerHTML += product.city;
+
+                        const coordinates = document.createElement('p');
+                        coordinates.style.fontSize = '15px';
+                        const coordinatesLabel = document.createElement('span');
+                        coordinatesLabel.textContent = 'Experience: ';
+                        coordinatesLabel.style.fontWeight = 'bold';
+                        coordinates.appendChild(coordinatesLabel);
+                        coordinates.innerHTML += product.experience;
+
+
+                        nameDetailsDiv.appendChild(phoneNumber);
+                        nameDetailsDiv.appendChild(email);
+                        nameDetailsDiv.appendChild(city);
+                        nameDetailsDiv.appendChild(coordinates);
+
+
+                        const details = document.createElement("p");
+                        details.style.fontSize = '15px';
+                        details.textContent = product.details;
+                        console.log(product.details);
+
+
+                        const bookNowButton = document.createElement('a');
+                        bookNowButton.textContent = 'Book now';
+                        bookNowButton.classList.add('btn');
+                        bookNowButton.addEventListener('click', async () => {
+                            // Retrieve seller ID from the product data
+                            try {
+                                // Retrieve user ID from local storage
+                                const userId = localStorage.getItem("userId");
+                                if (!userId) {
+                                    // Redirect to login page if userId is missing
+                                    window.location.href = './Login And Registration.html';
+                                    return;
+                                }
+                                const sellerId = product._id;
+                                if (!sellerId) {
+                                    console.error('Error: Seller ID is missing.');
+                                    alert('Error: Seller ID is missing.');
+                                    return;
+                                }
+                                // Retrieve product ID from the URL
+                                const productId = urlParams.get('productId');
+                                if (!productId) {
+                                    // Redirect to home page if productId is missing
+                                    window.location.href = './index.html';
+                                    return;
+                                }
+                                const bookingData = {
+                                    user: userId,
+                                    product: productId,
+                                    seller: sellerId,
+                                    sellerEmail: product.email,
+                                    sellerName: product.Name,
+                                };
+                                fetch('https://asap-new-backend.vercel.app/bookings', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(bookingData)
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Failed to create booking');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        // Redirect to the thank you page after the booking is created
+                                        window.location.href = './ThankYoupage.html'; // Replace 'thankyou.html' with your actual thank you page URL
+                                    })
+                                    .catch(error => {
+                                        console.error('Error creating booking:', error);
+                                        // Handle the error accordingly, e.g., display an error message to the user
+                                    });
+                            } catch (error) {
+                                console.error('Error creating checkout session:', error);
+                            }
+                        });
+
+                        const modalbutton = document.createElement('a');
+                        modalbutton.textContent = 'Checkout Information';
+                        modalbutton.classList.add('btn');
+                        modalbutton.addEventListener('click', () => {
+                            // Create the product details content
+                            const productDetailsContent = document.createElement('div');
+                            productDetailsContent.classList.add('modal-content'); // Add a class for styling
+
+                            // Create a container for the image and information
+                            const productContainer = document.createElement('div');
+                            productContainer.classList.add('product-container');
+
+                            // Add product image to the right side
+                            const productImage = document.createElement('img');
+                            productImage.src = 'https://images.pond5.com/portrait-black-man-dressed-stylish-photo-152356737_iconl_nowm.jpeg';
+                            productImage.alt = product.Name;
+                            productImage.classList.add('product-image'); // Apply the product image styling
+
+                            // Append product image to the container
+                            productContainer.appendChild(productImage);
+
+                            // Create a container for product information on the left side
+                            const infoContainer = document.createElement('div');
+                            infoContainer.classList.add('info-container');
+                            // Add line break
+                            const lineBreak1 = document.createElement('div');
+                            lineBreak1.classList.add('line-break');
+                            infoContainer.appendChild(lineBreak1);
+                            // Add heading for Service Provider Information
+                            const serviceProviderHeading = document.createElement('h1');
+                            serviceProviderHeading.textContent = 'Service Provider Information';
+                            infoContainer.appendChild(serviceProviderHeading);
+
+                            // Add line break
+                            const lineBreak3 = document.createElement('div');
+                            lineBreak3.classList.add('line-break');
+                            infoContainer.appendChild(lineBreak3);
+
+                            // Add product name
+                            const productName = document.createElement('h3');
+                            productName.textContent = product.Name;
+                            infoContainer.appendChild(productName);
+
+                            // Add additional product information
+                            const phoneNumber = createProductDetail('Phone Number', product.phoneNumber);
+                            const email = createProductDetail('Email', product.email);
+                            const city = createProductDetail('City', product.city);
+                            const coordinates = createProductDetail('Location', `(${latitude}, ${longitude})`);
+
+                            // Append additional product information to the left side container
+                            [phoneNumber, email, city, coordinates].forEach(detail => infoContainer.appendChild(detail));
+                            const lineBreak4 = document.createElement('div');
+                            lineBreak4.classList.add('line-break');
+                            infoContainer.appendChild(lineBreak4);
+
+                            // Add heading for User Information
+                            // const userInformationHeading = document.createElement('h1');
+                            // userInformationHeading.textContent = 'User Information';
+                            // infoContainer.appendChild(userInformationHeading);
+
+                            // // Add line break
+                            // const lineBreak2 = document.createElement('div');
+                            // lineBreak2.classList.add('line-break');
+                            // infoContainer.appendChild(lineBreak2);
+
+                            // Retrieve user ID from local storage
+                            // const userId = localStorage.getItem("userId");
+                            // const userIdElement = createProductDetail('User ID', userId);
+                            // infoContainer.appendChild(userIdElement);
+
+
+                            // Append both containers to the main content
+                            productDetailsContent.appendChild(infoContainer);
+                            productDetailsContent.appendChild(productContainer);
+
+                            // Display the product details in the modal
+                            const productDetailsContainer = document.getElementById('productDetails');
+                            productDetailsContainer.innerHTML = ''; // Clear previous content
+                            productDetailsContainer.appendChild(productDetailsContent);
+
+                            // Show the modal
+                            document.getElementById('modalOverlay').style.display = 'flex';
+                        });
+
+                        // Function to create product detail elements
+                        function createProductDetail(label, value) {
+                            const detailElement = document.createElement('h4');
+                            detailElement.textContent = `${label}: ${value}`;
+                            return detailElement;
+                        }
+
+
+                        // Function to create product detail elements
+                        function createProductDetail(label, value) {
+                            const detailElement = document.createElement('h4');
+                            detailElement.textContent = `${label}: ${value}`;
+                            return detailElement;
+                        }
+                        function bookNow() {
+                            // Retrieve seller ID from the product data
+                            const sellerId = product._id;
+
+                            // Retrieve user ID from local storage
+                            const userId = localStorage.getItem("userId");
+
+                            // Retrieve product ID from the URL
+                            const productId = urlParams.get('productId');
+
+                            // Collect additional data from your form elements
+                            const formData = {
+                                userId,
+                                productId,
+                                sellerId,
+                                // Add more data as needed
+                            };
+
+                            // Send a POST request to the /bookings endpoint
+                            fetch('https://asap-new-backend.vercel.app/bookings', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(formData),
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.json();
+                                    } else {
+                                        throw new Error(`Error creating booking: ${response.status} - ${response.statusText}`);
+                                    }
+                                })
+                                .then(bookingData => {
+                                    window.location.href = './ThankYoupage.html';
+                                })
+                                .catch(error => {
+                                    console.error('Error creating booking:', error);
+                                    // Optionally, you can display an error message to the user.
+                                });
+                        }
+
+                        const chatButton = document.createElement('a');
+                        chatButton.textContent = 'Chat';
+                        chatButton.classList.add('btn');
+                        chatButton.addEventListener('click', () => {
+                            // Retrieve seller ID from the product data
+                            const sellerId = product._id;
+
+                            // Retrieve user ID from local storage
+                            const userId = localStorage.getItem("userId");
+
+                            // Redirect to the chat page with user ID and seller ID as parameters
+                            window.location.href = `./message.html?userId=${userId}&sellerId=${sellerId}`;
+                        });
+
+                        // Append elements to the product card
+                        productCard.appendChild(nameDetailsDiv);
+                        productCard.appendChild(productImage);
+                        productCard.appendChild(productName);
+                        productCard.appendChild(phoneNumber);
+                        productCard.appendChild(email);
+                        productCard.appendChild(city);
+                        productCard.appendChild(coordinates);
+                        productCard.appendChild(details);
+                        productCard.appendChild(bookNowButton);
+                        // productCard.appendChild(chatButton);
+                        productCard.appendChild(modalbutton);
+
+
+                        // Append the product card to the appropriate Swiper container
+                        swiperContainer.appendSlide(productCard);
+                    });
+                };
+                // Create product cards for both rows
+                createProductCards(row1Data, row1Slider);
+                createProductCards(row2Data, row2Slider);
+            })
+            .catch(error => {
+                console.error('Error fetching API data:', error);
+            });
+    </script>
+    <!-- Add this script to your HTML file -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve user ID from local storage
+            const userId = localStorage.getItem("userId");
+
+            // Get the element where you want to display the user ID
+            const loggedInUserIdElement = document.getElementById("loggedInUserId");
+            const userDetailElement = document.getElementById("userDetails");
+
+            // Display the user ID in the element
+            if (userId) {
+                // Fetch user details from the server
+                fetch(`https://asap-new-backend.vercel.app/users/${userId}`)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error(`Error fetching user details: ${response.status} - ${response.statusText}`);
+                        }
+                    })
+                    .then(data => {
+                        const user = data.user;
+                        const userInformationHeading = document.createElement('h2');
+                        userInformationHeading.textContent = 'User Information';
+                        userInformationHeading.style.marginBottom = '10px';
+                        userDetailElement.appendChild(userInformationHeading);
+                        const hrElement = document.createElement('hr');
+                        hrElement.style.marginBottom = '10px';
+                        userDetailElement.appendChild(hrElement);
+
+                        // Style each user detail to appear on a new line
+                        const detailStyle = 'margin-bottom: 10px;';
+
+                        const userNameElement = document.createElement('h2');
+                        userNameElement.textContent = user.Name;
+                        userNameElement.style.cssText = detailStyle;
+                        userDetailElement.appendChild(userNameElement);
+
+                        const userEmailElement = document.createElement('h3');
+                        userEmailElement.textContent = user.email;
+                        userEmailElement.style.cssText = detailStyle;
+                        userDetailElement.appendChild(userEmailElement);
+
+                        const userPhoneElement = document.createElement('h3');
+                        userPhoneElement.textContent = user.phoneNumber;
+                        userPhoneElement.style.cssText = detailStyle;
+                        userDetailElement.appendChild(userPhoneElement);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user details:', error);
+                    });
+
+            } else {
+                loggedInUserIdElement.textContent = "Not logged in";
+                userDetailElement.textContent = "User details not available. User not logged in.";
+            }
+
+            const elements = stripe.elements();
+            const card = elements.create('card');
+            card.mount('#card-element'); // Replace with the actual ID of your card element container
+        });
+    </script>
+
+    <script>
+        // Retrieve productId from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('productId');
+        const zipCode = urlParams.get('zipCode')
+        const city = urlParams.get('city')
+        const painNow = urlParams.get('paidNow')
+        if (painNow) {
+            localStorage.setItem('payStatus', true)
+        }
+        // console.log("city ",city);
+        // Display productId on the screen
+        const productIdDisplay = document.getElementById('productIdDisplay');
+        // productIdDisplay.textContent = `Product ID: ${productId}`;
+    </script>
+
+</body>
+
+</html>

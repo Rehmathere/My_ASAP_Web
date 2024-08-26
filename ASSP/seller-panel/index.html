@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashbaord</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+        aria-controls="offcanvasExample">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand fw-bold" href="index.html">ASsoonaspossible</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto me-md-4 mb-2 mb-lg-0">
+          <li class="nav-item dropdown d-flex text-light">
+            <a id="welcomeText" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fa-regular fa-user"></i> Seller
+            </a>
+            <ul class="dropdown-menu border-0 bg-light ms-auto">
+              <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+              <li><a class="dropdown-item" id="logoutButton" href="../BecomeSeller.html">Logout</a></li>
+            </ul>
+        </ul>
+        </li>
+      </div>
+    </div>
+  </nav>
+  <!-- navbar end -->
+
+  <!-- sidebar -->
+  <div class="offcanvas offcanvas-start bg-purple text-white sidebar-nav" tabindex="-1" id="offcanvasExample"
+    aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header shadow-sm d-block text-center">
+      <div class="offcanvas-title" id="offcanvasExampleLabel">
+        <a class="navbar-brand fw-bold" href="index.html">ASsoonaspossible</a>
+      </div>
+    </div>
+    <div class="offcanvas-body pt-3 p-0">
+      <nav class="navbar-dark">
+        <ul class="navbar-nav sidenav">
+          <li class="nav-link bordered px-3 active">
+            <a href="index.html" class="nav-link px-3 active">
+              <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-link bordered px-3">
+            <a href="profile.html" class="nav-link px-3">
+              <span class="me-2"><i class="bi bi-person"></i></span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li class="nav-link bordered px-3">
+            <a href="testing.html" class="nav-link px-3">
+              <span class="me-2"><i class="bi bi-person"></i></span>
+              <span>message</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- sidebar end -->
+
+  <!-- main content -->
+  <main class="mt-3 p-2">
+    <div class="container">
+      <div class="page-title">
+        <div style="font-weight: 500;" class="fs-3">Seller Dashboard</div>
+      </div>
+      <nav class="mt-2 mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+      </nav>
+      <div class="dashboard">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card px-4 border-0 shadow-sm">
+              <div class="card-body">
+                <div id="userCount" class="fs-5 text-end">
+                  <!-- User count will be dynamically inserted here -->
+                </div>
+                <div style="margin-top: -10px;" class="fs-3 text-start text-info">
+                  <i class="bi bi-people-fill"></i>
+                </div>
+                <div style="margin-top: -40px;" class="fs-5 pt-4 text-end">
+                  Users
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card px-4 border-0 shadow-sm">
+              <div class="card-body">
+                <div id="categoryCount" class="fs-5 text-end">
+                  <!-- Category count will be dynamically inserted here -->
+                </div>
+                <div style="margin-top: -10px;" class="fs-3 text-start text-warning">
+                  <i class="bi bi-intersect"></i>
+                </div>
+                <div style="margin-top: -40px;" class="fs-5 pt-4 text-end">
+                  Categories
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card px-4 border-0 shadow-sm">
+              <div class="card-body">
+                <div id="bookingCount" class="fs-5 text-end">
+
+                </div>
+                <div style="margin-top: -10px;" class="fs-3 text-start text-danger">
+                  <i class="bi bi-journal-text"></i>
+                </div>
+                <div style="margin-top: -40px;" class="fs-5 pt-4 text-end">
+                  Orders
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="latest-added mt-5">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="page-title fs-5 fw-bold mb-4">
+              List of Bookings
+            </div>
+            <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Index</th>
+                  <th>Product Name</th>
+                  <th>Buyer Name</th>
+                  <th>Buyer Contact</th>
+                  <th>BuyerEmail</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- User data will be appended here dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- main content end-->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="js/jquery-3.5.1.js"></script>
+  <script src="js/jquery.dataTables.min.js"></script>
+  <script src="js/dataTables.bootstrap5.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function fetchUserDetails() {
+      try {
+        // Get the user ID from localStorage
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) {
+          console.error("User ID not found in localStorage");
+          return;
+        }
+
+        // Update the endpoint to the correct one
+        const response = await fetch(`https://assp-api.vercel.app/getallsellers/${userId}`, {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+
+        if (response.status === 200) {
+          const userData = await response.json();
+          const username = userData.user.Name;
+
+          // Display the welcome message with the username
+          document.getElementById("welcomeText").textContent = `Welcome ${username},`;
+        } else {
+          const data = await response.json();
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching user details: " + error.message);
+      }
+    }
+
+    // Call the function to fetch and display user details
+    fetchUserDetails();
+  </script>
+  <!-- <script>
+    // Function to fetch and display bookings
+   const fetchAndDisplayBookings = async () => {
+     try {
+       // Fetch bookings data from the API
+       const response = await fetch(`https://assp-api.vercel.app/specificbooking?sellerId=${userId}`);
+
+       const bookingsData = await response.json();
+   
+       // Get the table body element
+       const tableBody = document.querySelector('#bookingdatatable tbody');
+       const reversedBookingsData = bookingsData.reverse();
+   
+       // Clear existing rows from the table
+       tableBody.innerHTML = '';
+       // Loop through the bookings data and append rows to the table
+       reversedBookingsData.forEach((booking, index) => {
+         const row = document.createElement('tr');
+         const trashButtonId = `trashButton_${index}`;
+         row.innerHTML = `
+           <td>${index + 1}</td>
+           <td>${booking.product.name}</td>
+           <td>${booking.user ? booking.user.Name : 'N/A'}</td>
+           <td>${booking.user ? booking.user.phoneNumber : 'N/A'}</td>
+           <td>${booking.user ? booking.user.email : 'N/A'}</td>
+           <td>${booking.dateAdded}</td>
+           <td>
+             <a href="#" class="btn btn-sm btn-warning">
+               <i class="bi bi-pencil-square"></i>
+             </a>
+             <a href="#" id="${trashButtonId}" class="btn btn-sm btn-danger">
+               <i class="bi bi-trash-fill"></i>
+             </a>
+           </td>
+         `;
+         
+         tableBody.appendChild(row);
+       });
+     
+       
+     } catch (error) {
+       console.error('Error fetching booking data:', error);
+       console.log("hello")
+
+     }
+     
+   };
+   
+   // Event listener for document ready
+   document.addEventListener('DOMContentLoaded', async function () {
+     // Fetch and display bookings when the page loads
+     await fetchAndDisplayBookings();
+     console.log("hello1")
+
+   });
+   
+   // You can call fetchAndDisplayBookings from other parts of your code
+   // For example, after creating a booking on another page
+   // fetchAndDisplayBookings();
+   
+   </script> -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        const userId = localStorage.getItem("userId");
+        // Fetch bookings data from the API
+        const response = await fetch(`https://assp-api.vercel.app/specificbooking?sellerId=${userId}`);
+        const bookingsData = await response.json();
+        document.getElementById('bookingCount').textContent = bookingsData.length;
+        // Get the table body element
+        const tableBody = document.querySelector('#datatable tbody');
+        const reversedBookingsData = bookingsData.reverse();
+        // Loop through the bookings data and append rows to the table
+        reversedBookingsData.forEach((booking, index) => {
+          const row = document.createElement('tr');
+          const trashButtonId = `trashButton_${index}`;
+          const checkButtonId = `checkButton_${index}`;
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${booking.product.name}</td>
+            <td>${booking.user.Name}</td>
+            <td>${booking.user.phoneNumber}</td>
+            <td>${booking.user.email}</td>
+            <td>${booking.dateAdded}</td>
+            <td>${booking.ordered ? 'Approved' : 'Pending'}</td>
+            <td>
+                <a href="#" id="${checkButtonId}" class="btn btn-sm btn-warning" data-booking-id="${booking._id}" data-buyer-email="${booking.user.email}" data-buyer-name="${booking.user.Name}" data-seller-name="${booking.seller.Name}">
+                  <i class="bi bi-check-lg"></i>
+                </a>
+                <a href="#" id="${trashButtonId}" class="btn btn-sm btn-danger" data-booking-id="${booking._id}" data-buyer-email="${booking.user.email}" data-buyer-name="${booking.user.Name}" data-seller-name="${booking.seller.Name}">
+                    <i class="bi bi-trash-fill"></i>
+                </a>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+
+          const trashButton = document.getElementById(trashButtonId);
+          const checkButton = document.getElementById(checkButtonId);
+          checkButton.addEventListener('click', function () {
+            console.log("Check button pressed")
+            const bookingId = this.getAttribute("data-booking-id");
+            const buyerEmail = this.getAttribute("data-buyer-email");
+            const buyerName = this.getAttribute("data-buyer-name");
+            const sellerName = this.getAttribute("data-seller-name");
+            updateStatus(bookingId, buyerEmail, buyerName, sellerName)
+          });
+
+          trashButton.addEventListener('click', function (event) {
+            console.log('Trash button clicked');
+            const bookingId = this.getAttribute("data-booking-id");
+            const buyerEmail = this.getAttribute("data-buyer-email");
+            const buyerName = this.getAttribute("data-buyer-name");
+            const sellerName = this.getAttribute("data-seller-name");
+            console.log('Booking ID:', bookingId);
+            deleteBooking(bookingId, buyerEmail, buyerName, sellerName);
+          });
+        });
+
+      } catch (error) {
+        console.error('Error fetching booking data:', error);
+      }
+      async function deleteBooking(bookingId, buyerEmail, buyerName, sellerName) {
+        try {
+          const response = await fetch(`https://asap-new-backend.vercel.app/bookings/${bookingId}?buyerEmail=${encodeURIComponent(buyerEmail)}&buyerName=${encodeURIComponent(buyerName)}&sellerName=${encodeURIComponent(sellerName)}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            alert('Failed to delete booking');
+          }
+
+          console.log('Booking deleted successfully');
+          window.location.reload();
+        } catch (error) {
+          console.error('Error deleting booking:', error);
+          // Handle the error accordingly, e.g., display an error message to the user
+        }
+      }
+      async function updateStatus(bookingId, buyerEmail, buyerName, sellerName) {
+        try {
+          const response = await fetch(`https://asap-new-backend.vercel.app/updateBooking/${bookingId}?buyerEmail=${encodeURIComponent(buyerEmail)}&buyerName=${encodeURIComponent(buyerName)}&sellerName=${encodeURIComponent(sellerName)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          const data = await response.json();
+          window.location.reload();
+
+        } catch (error) {
+          console.log("error" , error)
+        }
+      }
+    });
+
+  </script>
+  <script>
+    $(document).ready(function () {
+      $('#datatable').DataTable({
+        paging: false,
+        info: true,
+        dom: 'Bfrtip',
+        select: true,
+        pageLength: 5,
+        recordsTotal: 10,
+      });
+    });
+  </script>
+  <script>
+    // Assuming your API endpoint is https://assp-api.vercel.app/Category
+    const api = 'https://assp-api.vercel.app/Category';
+
+    // Fetch data from the API to get the category count
+    $.ajax({
+      url: api,
+      type: 'GET',
+      success: function (data) {
+        // Update the category count in the HTML element
+        $('#categoryCount').text(data.length);
+      },
+      error: function (error) {
+        console.error('Error fetching data from the API:', error);
+      }
+    });
+  </script>
+  <script>
+    async function logoutUser() {
+      try {
+        // Get the user token from localStorage
+        const userToken = localStorage.getItem("token");
+
+        // Check if the user is authenticated (token exists)
+        if (!userToken) {
+          console.error("User is not authenticated. Token not found.");
+          return;
+        }
+
+        // Send a POST request to the logout endpoint
+        const response = await fetch("https://assp-api.vercel.app/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": userToken, // Include the token in the Authorization header
+          },
+        });
+
+        if (response.status === 200) {
+          // Clear user data from localStorage
+          localStorage.removeItem("userId");
+          localStorage.removeItem("token");
+
+          // Redirect to the login page or any other page after logout
+          window.location.href = "../Frontend/BecomeSeller.html";
+        } else {
+          const data = await response.json();
+          console.log("Logout failed:", data.message);
+        }
+      } catch (error) {
+        console.error("An error occurred during logout:", error.message);
+      }
+    }
+
+    // Example: Call the logout function when the logout button is clicked
+    const logoutButton = document.getElementById("logoutButton");
+
+    if (logoutButton) {
+      logoutButton.addEventListener("click", logoutUser);
+    }
+  </script>
+  <script>
+    async function fetchUserCount() {
+      try {
+        // Fetch user data from the API
+        const usersResponse = await fetch(`https://assp-api.vercel.app/users`, {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+
+        // Fetch seller data from the API
+        const sellersResponse = await fetch(`https://assp-api.vercel.app/getallsellers`, {
+          method: "GET",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+
+        if (usersResponse.status === 200 && sellersResponse.status === 200) {
+          const usersData = await usersResponse.json();
+          const sellersData = await sellersResponse.json();
+
+          // Combine the length of users and sellers and update the user count in the HTML element
+          const totalCount = usersData.length + sellersData.length;
+          document.getElementById("userCount").textContent = totalCount;
+        } else {
+          const usersData = await usersResponse.json();
+          const sellersData = await sellersResponse.json();
+          console.log("Failed to fetch user count. Users API: " + usersData.message + " Sellers API: " + sellersData.message);
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching user count: " + error.message);
+      }
+    }
+
+    // Call the function to fetch and display user count
+    fetchUserCount();
+  </script>
+
+</body>
+
+</html>
